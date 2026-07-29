@@ -164,7 +164,10 @@ public class DepotMaintainTaskUserControlModel : TaskSettingsViewModel, DepotMai
 
     public ObservableCollection<DepotPlanItemViewModel> PlanList { get; private set => SetAndNotify(ref field, value); } = [];
 
-    public void AddPlan() => PlanList.Add(new());
+    public void AddPlan()
+    {
+        PlanList.Add(new() { Index = PlanList.Count, });
+    }
 
     public void RemovePlan(DepotPlanItemViewModel plan)
     {
@@ -288,7 +291,9 @@ public class DepotMaintainTaskUserControlModel : TaskSettingsViewModel, DepotMai
         {
             // 根据 DropId 从掉落列表恢复 DropName，避免初始化显示为"不选择"
             var dropName = FightSettingsUserControlModel.Instance.DropsList.FirstOrDefault(i => i.Value == plan.DropId)?.Display ?? LocalizationHelper.GetString("NotSelected");
-            var uiPlan = new DepotPlanItemViewModel(plan.Stage, plan.DropId, dropName, plan.DropCount, plan.UseMedicine, plan.MedicineCount, plan.UseStone, plan.StoneCount);
+            var uiPlan = new DepotPlanItemViewModel(plan.Stage, plan.DropId, dropName, plan.DropCount, plan.UseMedicine, plan.MedicineCount, plan.UseStone, plan.StoneCount) {
+                Index = list.Count,
+            };
             list.Add(uiPlan);
             uiPlan.PropertyChanged += PlanItem_PropertyChanged;
         }
